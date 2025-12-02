@@ -12,61 +12,64 @@ class LetterFormatSeeder extends Seeder
         DB::table('letter_formats')->insert([
             [
                 'name' => 'Surat Izin Tidak Masuk Kerja',
-                'content' => "
-                    SURAT IZIN TIDAK MASUK KERJA
+                'content' => "SURAT IZIN TIDAK MASUK KERJA
 
-                    Kepada Yth,
-                    HRD / Atasan Langsung
+Kepada Yth,
+HRD / Atasan Langsung
 
-                    Dengan ini saya, {{nama}}, mengajukan permohonan izin 
-                    tidak dapat masuk kerja pada tanggal {{tanggal}} 
-                    karena keperluan mendesak.
+Dengan ini saya, {{nama}}, mengajukan permohonan izin tidak dapat masuk kerja
+pada tanggal {{tanggal}} karena keperluan mendesak.
 
-                    Jenis Surat: {{jenis_surat}}
+Jabatan: {{jabatan}}
+Departemen: {{departemen}}
 
-                    Demikian permohonan ini saya sampaikan. 
-                    Atas pengertian dan kebijaksanaannya saya ucapkan terima kasih.
-                ",
+Demikian permohonan ini saya sampaikan.
+Atas pengertian dan kebijaksanaannya saya ucapkan terima kasih.
+
+Hormat saya,
+{{nama}}",
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
             [
                 'name' => 'Surat Sakit Tidak Masuk Kerja',
-                'content' => "
-                    SURAT SAKIT TIDAK MASUK KERJA
+                'content' => "SURAT SAKIT TIDAK MASUK KERJA
 
-                    Kepada Yth,
-                    HRD / Atasan Langsung
+Kepada Yth,
+HRD / Atasan Langsung
 
-                    Dengan ini saya, {{nama}}, tidak dapat masuk kerja 
-                    pada tanggal {{tanggal}} karena kondisi kesehatan 
-                    yang kurang baik.
+Dengan ini saya, {{nama}}, memberitahukan bahwa saya tidak dapat masuk kerja
+pada tanggal {{tanggal}} karena kondisi kesehatan yang kurang baik.
 
-                    Jenis Surat: {{jenis_surat}}
+Jabatan: {{jabatan}}
+Departemen: {{departemen}}
 
-                    Demikian pemberitahuan ini saya sampaikan. 
-                    Atas perhatian dan pengertiannya saya ucapkan terima kasih.
-                ",
+Demikian pemberitahuan ini saya sampaikan.
+Atas perhatian dan pengertiannya saya ucapkan terima kasih.
+
+Hormat saya,
+{{nama}}",
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
             [
                 'name' => 'Surat Tugas Bekerja di Luar Kantor',
-                'content' => "
-                    SURAT TUGAS BEKERJA DI LUAR KANTOR
+                'content' => "SURAT TUGAS BEKERJA DI LUAR KANTOR
 
-                    Dengan ini memberikan tugas kepada:
+Kepada Yth,
+HRD / Atasan Langsung
 
-                    Nama: {{nama}}
+Dengan ini saya, {{nama}}, memberitahukan bahwa saya akan melaksanakan tugas bekerja di luar kantor
+pada tanggal {{tanggal}} sesuai kebutuhan operasional.
 
-                    Untuk melaksanakan pekerjaan di luar kantor 
-                    pada tanggal {{tanggal}} sesuai kebutuhan operasional.
+Jabatan: {{jabatan}}
+Departemen: {{departemen}}
 
-                    Jenis Surat: {{jenis_surat}}
+Demikian surat tugas ini saya sampaikan.
+Atas perhatian dan kebijaksanaannya saya ucapkan terima kasih.
 
-                    Demikian surat tugas ini dibuat untuk dipergunakan 
-                    sebagaimana mestinya.
-                ",
+Hormat saya,
+{{nama}}",
                 'created_at' => now(),
                 'updated_at' => now(),
             ],

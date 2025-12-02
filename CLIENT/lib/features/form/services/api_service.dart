@@ -1,37 +1,64 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
-
 class ApiService {
-  static const String baseURL = "http://10.0.2.2:8000/api";
+  static const String baseURL = "https://11407778a5e2.ngrok-free.app/api";
 
   static Future<bool> createSurat(Map data) async {
-    final res = await http.post(Uri.parse("$baseURL/surat"), body: data);
-    return res.statusCode == 200 || res.statusCode == 201;
+    try {
+      final res = await http.post(
+        Uri.parse("$baseURL/letters"),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode(data),
+      );
+      
+      print('Create Letter Status: ${res.statusCode}');
+      print('Create Letter Response: ${res.body}');
+      
+      return res.statusCode == 200 || res.statusCode == 201;
+    } catch (e) {
+      print('Create Letter Exception: $e');
+      return false;
+    }
   }
 
   static Future<List> getSurat() async {
-    final res = await http.get(Uri.parse("$baseURL/surat"));
+    try {
+      final res = await http.get(Uri.parse("$baseURL/letters"));
 
-    if (res.statusCode == 200) {
-      final decode = jsonDecode(res.body);
+      if (res.statusCode == 200) {
+        final decode = jsonDecode(res.body);
 
-      if (decode is Map && decode.containsKey('data')) {
-        return decode['data'];
+        if (decode is Map && decode.containsKey('data')) {
+          return decode['data'];
+        }
+
+        if (decode is List) {
+          return decode;
+        }
       }
-
-      if (decode is List) {
-        return decode;
-      }
+      return [];
+    } catch (e) {
+      print('Get Letters Exception: $e');
+      return [];
     }
-    return [];
   }
 
   static Future<bool> updateStatus(dynamic id, String status) async {
-    final res = await http.put(
-      Uri.parse("$baseURL/surat/$id"),
-      body: {"status": status},
-    );
-    return res.statusCode == 200;
+    try {
+      final res = await http.put(
+        Uri.parse("$baseURL/letters/$id/status"),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({"status": status}),
+      );
+      
+      print('Update Status: ${res.statusCode}');
+      print('Update Response: ${res.body}');
+      
+      return res.statusCode == 200;
+    } catch (e) {
+      print('Update Status Exception: $e');
+      return false;
+    }
   }
 }

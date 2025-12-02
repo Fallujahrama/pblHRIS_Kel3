@@ -4,17 +4,15 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\LetterFormatController;
 use App\Http\Controllers\Api\LetterController;
 
-<<<<<<< HEAD
-Route::apiResource('letter-formats', LetterFormatController::class);
-Route::apiResource('letters', LetterController::class);
-=======
-// Ambil list template
+// Letter Formats (Template)
 Route::get('/letter-formats', [LetterFormatController::class, 'index']);
-Route::get('/letter-formats/{id}', [LetterFormatController::class, 'show']);
 Route::post('/letter-formats', [LetterFormatController::class, 'store']);
 Route::put('/letter-formats/{id}', [LetterFormatController::class, 'update']);
 Route::delete('/letter-formats/{id}', [LetterFormatController::class, 'destroy']);
 
-// Create surat dari Flutter
+// Letters (Pengajuan)
+Route::get('/letters', [LetterController::class, 'index']);
 Route::post('/letters', [LetterController::class, 'store']);
->>>>>>> 3e544c07ad744a462140f624dcff9c15f3812863
+Route::get('/letters/{id}', [LetterController::class, 'show']);
+Route::put('/letters/{id}/status', [LetterController::class, 'updateStatus']);
+Route::delete('/letters/{id}', [LetterController::class, 'destroy']);

@@ -14,13 +14,15 @@ return new class extends Migration
         Schema::create('letters', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('letter_format_id');
-            $table->unsignedBigInteger('employee_id');
             $table->string('name', 100);
-            $table->integer('status');
+            $table->string('jabatan', 100);
+            $table->string('departemen', 100);
+            $table->date('tanggal');
+            $table->string('pdf_path')->nullable(); // File PDF yang digenerate
+            $table->enum('status', ['pending', 'approved', 'rejected'])->default('pending');
             $table->timestamps();
 
             $table->foreign('letter_format_id')->references('id')->on('letter_formats')->onDelete('cascade');
-            $table->foreign('employee_id')->references('id')->on('employees')->onDelete('cascade');
         });
     }
 

@@ -1,10 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
     <application
-<<<<<<< HEAD
-        android:label="tracer_study_test_api"
-=======
         android:label="Letter App"
->>>>>>> 3e544c07ad744a462140f624dcff9c15f3812863
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import '../../letter/controllers/letter_controller.dart';
+import '../../letter/models/letter_format.dart';
+import '../services/api_service.dart';
 
 class FormSuratPage extends StatefulWidget {
   const FormSuratPage({super.key});
@@ -10,11 +14,30 @@ class FormSuratPage extends StatefulWidget {
 class _FormSuratPageState extends State<FormSuratPage> {
   final TextEditingController namaController = TextEditingController();
   final TextEditingController jabatanController = TextEditingController();
+  final TextEditingController departemenController = TextEditingController();
 
-  String? selectedJenisSurat;
+  final LetterController letterController = LetterController();
+  
+  List<LetterFormat> templateList = [];
+  LetterFormat? selectedTemplate;
   DateTime? selectedDate;
+  bool isLoading = true;
 
-  final List<String> jenisSuratList = ["Izin", "Sakit", "Tugas"];
+  @override
+  void initState() {
+    super.initState();
+    loadTemplates();
+  }
+
+  Future<void> loadTemplates() async {
+    setState(() => isLoading = true);
+    try {
+      templateList = await letterController.fetchLetterFormats();
+    } catch (e) {
+      print('Error loading templates: $e');
+    }
+    setState(() => isLoading = false);
+  }
 
   Future<void> pickDate() async {
     final picked = await showDatePicker(
@@ -28,6 +51,52 @@ class _FormSuratPageState extends State<FormSuratPage> {
       setState(() {
         selectedDate = picked;
       });
+    }
+  }
+
+  Future<void> submitSurat() async {
+    if (namaController.text.isEmpty ||
+        jabatanController.text.isEmpty ||
+        departemenController.text.isEmpty ||
+        selectedTemplate == null ||
+        selectedDate == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Semua field harus diisi!')),
+      );
+      return;
+    }
+
+    final data = {
+      'letter_format_id': selectedTemplate!.id,
+      'name': namaController.text,
+      'jabatan': jabatanController.text,
+      'departemen': departemenController.text,
+      'tanggal': selectedDate!.toIso8601String().split('T')[0],
+    };
+
+    try {
+      final success = await ApiService.createSurat(data);
+      
+      if (success && mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Surat berhasil diajukan!')),
+        );
+        
+        // Kembali ke home screen
+        context.go('/');
+      } else {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Gagal mengajukan surat')),
+          );
+        }
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Error: $e')),
+        );
+      }
     }
   }
 
@@ -73,6 +142,12 @@ class _FormSuratPageState extends State<FormSuratPage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  // Back button
+                  IconButton(
+                    onPressed: () => context.pop(),
+                    icon: const Icon(Icons.arrow_back, color: Color(0xff1e6ab3)),
+                  ),
+                  
                   const SizedBox(height: 5),
 
                   // JUDUL
@@ -86,118 +161,122 @@ class _FormSuratPageState extends State<FormSuratPage> {
                   ),
                   const SizedBox(height: 25),
 
-                  // NAMA
-                  inputBox(
-                    child: TextField(
-                      controller: namaController,
-                      decoration: const InputDecoration(
-                        border: InputBorder.none,
-                        hintText: "Nama",
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 18),
-
-                  // JABATAN
-                  inputBox(
-                    child: TextField(
-                      controller: jabatanController,
-                      decoration: const InputDecoration(
-                        border: InputBorder.none,
-                        hintText: "Jabatan",
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 18),
-
-                   // DEPARTEMEN
-                  inputBox(
-                    child: TextField(
-                      controller: jabatanController,
-                      decoration: const InputDecoration(
-                        border: InputBorder.none,
-                        hintText: "Departemen",
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 18),
-
-                  // JENIS SURAT DROPDOWN
-                  inputBox(
-                    child: DropdownButtonHideUnderline(
-                      child: DropdownButton<String>(
-                        value: selectedJenisSurat,
-                        hint: const Text(
-                          "Pilih Jenis Surat",
-                          style: TextStyle(color: Colors.blue),
+                  if (isLoading)
+                    const Center(child: CircularProgressIndicator())
+                  else ...[
+                    // NAMA
+                    inputBox(
+                      child: TextField(
+                        controller: namaController,
+                        decoration: const InputDecoration(
+                          border: InputBorder.none,
+                          hintText: "Nama Lengkap",
                         ),
-                        isExpanded: true,
-                        items: jenisSuratList.map((item) {
-                          return DropdownMenuItem(
-                            value: item,
-                            child: Text(item),
-                          );
-                        }).toList(),
-                        onChanged: (value) {
-                          setState(() {
-                            selectedJenisSurat = value;
-                          });
-                        },
                       ),
                     ),
-                  ),
-                  const SizedBox(height: 18),
+                    const SizedBox(height: 18),
 
-                  // TANGGAL
-                  GestureDetector(
-                    onTap: pickDate,
-                    child: inputBox(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            selectedDate == null
-                                ? "Pilih Tanggal"
-                                : "${selectedDate!.day}-${selectedDate!.month}-${selectedDate!.year}",
-                            style: const TextStyle(
-                              fontSize: 16,
-                              color: Colors.blue,
-                            ),
+                    // JABATAN
+                    inputBox(
+                      child: TextField(
+                        controller: jabatanController,
+                        decoration: const InputDecoration(
+                          border: InputBorder.none,
+                          hintText: "Jabatan",
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 18),
+
+                    // DEPARTEMEN
+                    inputBox(
+                      child: TextField(
+                        controller: departemenController,
+                        decoration: const InputDecoration(
+                          border: InputBorder.none,
+                          hintText: "Departemen",
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 18),
+
+                    // JENIS SURAT DROPDOWN (DINAMIS)
+                    inputBox(
+                      child: DropdownButtonHideUnderline(
+                        child: DropdownButton<LetterFormat>(
+                          value: selectedTemplate,
+                          hint: const Text(
+                            "Pilih Jenis Surat",
+                            style: TextStyle(color: Colors.blue),
                           ),
-                          const Icon(Icons.calendar_month, color: Colors.blue),
-                        ],
-                      ),
-                    ),
-                  ),
-
-                  const SizedBox(height: 35),
-
-                  // BUTTON AJUKAN
-                  SizedBox(
-                    width: double.infinity,
-                    child: ElevatedButton(
-                      onPressed: () {},
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xff4da3ff),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(25),
-                        ),
-                        padding: const EdgeInsets.symmetric(vertical: 15),
-                        shadowColor: Colors.black.withOpacity(0.2),
-                        elevation: 5,
-                      ),
-                      child: const Text(
-                        "Ajukan",
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 19,
-                          fontWeight: FontWeight.bold,
+                          isExpanded: true,
+                          items: templateList.map((template) {
+                            return DropdownMenuItem(
+                              value: template,
+                              child: Text(template.name),
+                            );
+                          }).toList(),
+                          onChanged: (value) {
+                            setState(() {
+                              selectedTemplate = value;
+                            });
+                          },
                         ),
                       ),
                     ),
-                  ),
+                    const SizedBox(height: 18),
 
-                  const SizedBox(height: 20),
+                    // TANGGAL
+                    GestureDetector(
+                      onTap: pickDate,
+                      child: inputBox(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              selectedDate == null
+                                  ? "Pilih Tanggal"
+                                  : "${selectedDate!.day}-${selectedDate!.month}-${selectedDate!.year}",
+                              style: const TextStyle(
+                                fontSize: 16,
+                                color: Colors.blue,
+                              ),
+                            ),
+                            const Icon(Icons.calendar_month, color: Colors.blue),
+                          ],
+                        ),
+                      ),
+                    ),
+
+                    const SizedBox(height: 35),
+
+                    // BUTTON AJUKAN
+                    SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton(
+                        onPressed: submitSurat,
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color(0xff4da3ff),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(25),
+                          ),
+                          padding: const EdgeInsets.symmetric(vertical: 15),
+                          shadowColor: Colors.black.withOpacity(0.2),
+                          elevation: 5,
+                        ),
+                        child: const Text(
+                          "Ajukan",
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 19,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ),
+
+                    const SizedBox(height: 20),
+                  ],
                 ],
               ),
             ),
@@ -205,5 +284,13 @@ class _FormSuratPageState extends State<FormSuratPage> {
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    namaController.dispose();
+    jabatanController.dispose();
+    departemenController.dispose();
+    super.dispose();
   }
 }

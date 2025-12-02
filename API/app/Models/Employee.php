@@ -6,9 +6,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class Employee extends Model
 {
-<<<<<<< HEAD
-    //
-=======
     protected $table = 'employees';
     protected $fillable = [
         'user_id',
@@ -19,5 +16,4 @@ class Employee extends Model
         'gender',
         'address'
     ];
->>>>>>> 3e544c07ad744a462140f624dcff9c15f3812863
 }

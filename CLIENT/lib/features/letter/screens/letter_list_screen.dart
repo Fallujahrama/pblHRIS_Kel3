@@ -23,9 +23,19 @@ class _LettersListScreenState extends State<LettersListScreen> {
 
   void loadData() async {
     setState(() => isLoading = true);
-    formats = await controller.fetchLetterFormats();
+    try {
+      formats = await controller.fetchLetterFormats();
+      print('Loaded ${formats.length} formats');
+    } catch (e) {
+      print('Error loading formats: $e');
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Error: $e')),
+        );
+      }
+      formats = []; // Set empty list jika error
+    }
     setState(() => isLoading = false);
-    print('Loaded ${formats.length} formats');
   }
 
   void _showTemplateDetail(LetterFormat format) {
