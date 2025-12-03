@@ -1,4 +1,4 @@
-2025/11/30-03:44:30.628 966cc0 Creating DB /private/var/folders/x7/914v_m254nd2w6jg4vd_2xh00000gn/T/flutter_tools.p9aMfZ/flutter_tools_chrome_device.DcEMBT/Default/Site Characteristics Database since it was missing.
-2025/11/30-03:44:30.631 966cc0 Reusing MANIFEST /private/var/folders/x7/914v_m254nd2w6jg4vd_2xh00000gn/T/flutter_tools.p9aMfZ/flutter_tools_chrome_device.DcEMBT/Default/Site Characteristics Database/MANIFEST-000001
-2025/11/30-03:44:30.631 966cc0 Recovering log #3
-2025/11/30-03:44:30.635 966cc0 Reusing old log /private/var/folders/x7/914v_m254nd2w6jg4vd_2xh00000gn/T/flutter_tools.p9aMfZ/flutter_tools_chrome_device.DcEMBT/Default/Site Characteristics Database/000003.log 
+2025/12/03-10:38:37.262 928 Reusing MANIFEST C:\Users\LENOVO\AppData\Local\Temp\flutter_tools.2f9aa1fb\flutter_tools_chrome_device.22fa0730\Default\Site Characteristics Database/MANIFEST-000001
+2025/12/03-10:38:37.263 928 Recovering log #6
+2025/12/03-10:38:37.264 928 Reusing old log C:\Users\LENOVO\AppData\Local\Temp\flutter_tools.2f9aa1fb\flutter_tools_chrome_device.22fa0730\Default\Site Characteristics Database/000006.log 
+2025/12/03-10:38:37.265 928 Delete type=0 #3
