@@ -20,3 +20,5 @@ Route::delete('/letters/{id}', [LetterController::class, 'destroy']);
 
 // Laporan Rekap Karyawan
 Route::get('/employee-recap', [EmployeeRecapController::class, 'index']);
+Route::get('/employee-recap/download', [EmployeeRecapController::class, 'download']);
+Route::get('/employee-recap/download-pdf', [EmployeeRecapController::class, 'downloadPdf']);
