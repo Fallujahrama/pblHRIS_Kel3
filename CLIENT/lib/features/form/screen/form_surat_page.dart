@@ -32,9 +32,14 @@ class _FormSuratPageState extends State<FormSuratPage> {
   Future<void> loadTemplates() async {
     setState(() => isLoading = true);
     try {
+      print('Loading templates from API...');
       templateList = await letterController.fetchLetterFormats();
+      print('✅ Templates loaded: ${templateList.length} items');
+      templateList.forEach((t) {
+        print('  - ${t.id}: ${t.name}');
+      });
     } catch (e) {
-      print('Error loading templates: $e');
+      print('❌ Error loading templates: $e');
     }
     setState(() => isLoading = false);
   }

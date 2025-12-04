@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
+import 'package:universal_html/html.dart' as html;
+import 'dart:convert';
 import '../services/api_service.dart';
 
 class HrdDetailPage extends StatelessWidget {
@@ -81,27 +83,43 @@ class HrdDetailPage extends StatelessWidget {
       final pdfBytes = await ApiService.downloadPdf(surat['id']);
 
       if (pdfBytes != null && context.mounted) {
-        // PDF berhasil diunduh
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              'PDF berhasil diunduh: surat_${surat['id']}.pdf',
+        // Trigger browser download
+        final fileName = 'surat_${surat['id']}_${DateTime.now().millisecondsSinceEpoch}.pdf';
+        
+        // Create blob and download
+        final blob = html.Blob([pdfBytes], 'application/pdf');
+        final url = html.Url.createObjectUrlFromBlob(blob);
+        final anchor = html.document.createElement('a') as html.AnchorElement
+          ..href = url
+          ..style.display = 'none'
+          ..download = fileName;
+        
+        html.document.body?.append(anchor);
+        anchor.click();
+        html.Url.revokeObjectUrl(url);
+        anchor.remove();
+
+        if (context.mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('✅ PDF berhasil diunduh: $fileName'),
+              duration: const Duration(seconds: 3),
             ),
-            duration: const Duration(seconds: 3),
-          ),
-        );
-        print('PDF downloaded: ${pdfBytes.length} bytes');
+          );
+          print('✅ PDF downloaded: ${pdfBytes.length} bytes');
+        }
       } else if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Gagal mengunduh PDF')),
+          const SnackBar(content: Text('❌ Gagal mengunduh PDF')),
         );
       }
     } catch (e) {
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error: $e')),
+          SnackBar(content: Text('❌ Error: $e')),
         );
       }
+      print('Download error: $e');
     }
   }
 
