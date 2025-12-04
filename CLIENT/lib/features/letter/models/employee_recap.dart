@@ -5,7 +5,6 @@ class EmployeeRecap {
   final String? position;
   final String? gender;
   final String? address;
-  final String? email;
   final String? createdAt;
   final List<Map<String, dynamic>>? letters;
 
@@ -16,7 +15,6 @@ class EmployeeRecap {
     this.position,
     this.gender,
     this.address,
-    this.email,
     this.createdAt,
     this.letters,
   });
@@ -29,7 +27,6 @@ class EmployeeRecap {
       position: json['position'],
       gender: json['gender'],
       address: json['address'],
-      email: json['email'],
       createdAt: json['created_at'],
       letters: List<Map<String, dynamic>>.from(json['letters'] ?? []),
     );

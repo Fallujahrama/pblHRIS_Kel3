@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Letter;
-use App\Models\LetterFormat;
+use App\Models\Employee;
 use Illuminate\Http\Request;
 
 class LetterController extends Controller
@@ -13,7 +13,9 @@ class LetterController extends Controller
     public function index()
     {
         try {
-            $letters = Letter::with('letterFormat')->orderBy('created_at', 'desc')->get();
+            $letters = Letter::with(['letterFormat', 'employee.user', 'employee.department', 'employee.position'])
+                ->orderBy('created_at', 'desc')
+                ->get();
 
             return response()->json([
                 'success' => true,
@@ -39,8 +41,13 @@ class LetterController extends Controller
                 'tanggal' => 'required|date',
             ]);
 
+            // Cari employee berdasarkan nama
+            $employee = Employee::whereRaw("CONCAT(first_name, ' ', last_name) = ?", [$request->name])
+                ->first();
+
             $letter = Letter::create([
                 'letter_format_id' => $request->letter_format_id,
+                'employee_id' => $employee ? $employee->id : null, // Simpan employee_id
                 'name' => $request->name,
                 'jabatan' => $request->jabatan,
                 'departemen' => $request->departemen,
@@ -65,7 +72,7 @@ class LetterController extends Controller
     public function show($id)
     {
         try {
-            $letter = Letter::with('letterFormat')->findOrFail($id);
+            $letter = Letter::with(['letterFormat', 'employee'])->findOrFail($id);
 
             return response()->json([
                 'success' => true,

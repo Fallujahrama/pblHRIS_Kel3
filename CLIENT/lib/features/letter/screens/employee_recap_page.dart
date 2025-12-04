@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:go_router/go_router.dart';
 import '../controllers/employee_recap_controller.dart';
+import 'employee_recap_detail_page.dart';
 
 class EmployeeRecapPage extends StatefulWidget {
   const EmployeeRecapPage({super.key});
@@ -150,7 +152,13 @@ class _EmployeeListItemState extends State<EmployeeListItem> {
               color: Colors.blue,
             ),
             onTap: () {
-              setState(() => isExpanded = !isExpanded);
+              // Navigate to detail page
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => EmployeeRecapDetailPage(employee: widget.employee),
+                ),
+              );
             },
           ),
           if (isExpanded)
@@ -170,8 +178,6 @@ class _EmployeeListItemState extends State<EmployeeListItem> {
                   _buildDetailRow('Posisi', widget.employee.position ?? '-'),
                   const SizedBox(height: 8),
                   _buildDetailRow('Gender', widget.employee.gender ?? '-'),
-                  const SizedBox(height: 8),
-                  _buildDetailRow('Email', widget.employee.email ?? '-'),
                   const SizedBox(height: 8),
                   _buildDetailRow('Bergabung', widget.employee.createdAt ?? '-'),
                   const SizedBox(height: 16),
