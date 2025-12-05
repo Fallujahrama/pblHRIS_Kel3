@@ -65,7 +65,7 @@ pada tanggal {{tanggal}} sesuai kebutuhan operasional.
 Jabatan: {{jabatan}}
 Departemen: {{departemen}}
 
-Demikian surat tugas ini saya sampaikan.
+Demikian tugas ini saya sampaikan.
 Atas perhatian dan kebijaksanaannya saya ucapkan terima kasih.
 
 Hormat saya,

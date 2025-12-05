@@ -118,10 +118,32 @@ class LetterController extends Controller
     private function generatePdf(Letter $letter)
     {
         try {
+            // Format tanggal ke bahasa Indonesia
+            $formattedDate = \Carbon\Carbon::parse($letter->tanggal)
+                ->locale('id')
+                ->translatedFormat('d F Y');
+
+            // Ganti placeholder di template content
+            $letterFormat = $letter->letterFormat;
+            $renderedContent = $letterFormat->content;
+            
+            // Ganti semua placeholder
+            $replacements = [
+                '{{tanggal}}' => $formattedDate,
+                '{{nama}}' => $letter->name,
+                '{{jabatan}}' => $letter->jabatan,
+                '{{departemen}}' => $letter->departemen,
+            ];
+            
+            $renderedContent = strtr($renderedContent, $replacements);
+            
+            // Update letterFormat->content dengan hasil penggantian
+            $letterFormat->content = $renderedContent;
+
             // Gunakan dompdf untuk generate PDF di backend
             $pdf = Pdf::loadView('letters.template', [
                 'letter' => $letter,
-                'letterFormat' => $letter->letterFormat,
+                'letterFormat' => $letterFormat,
             ]);
 
             // Buat nama file
