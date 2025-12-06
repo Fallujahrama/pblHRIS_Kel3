@@ -32,9 +32,14 @@ class _FormSuratPageState extends State<FormSuratPage> {
   Future<void> loadTemplates() async {
     setState(() => isLoading = true);
     try {
+      print('Loading templates from API...');
       templateList = await letterController.fetchLetterFormats();
+      print('✅ Templates loaded: ${templateList.length} items');
+      for (var t in templateList) {
+        print('  - ${t.id}: ${t.name}');
+      }
     } catch (e) {
-      print('Error loading templates: $e');
+      print('❌ Error loading templates: $e');
     }
     setState(() => isLoading = false);
   }
@@ -75,7 +80,8 @@ class _FormSuratPageState extends State<FormSuratPage> {
     };
 
     try {
-      final success = await ApiService.createSurat(data);
+      final result = await ApiService.createSurat(data);
+      final success = result['success'] as bool? ?? false;
       
       if (success && mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -87,7 +93,7 @@ class _FormSuratPageState extends State<FormSuratPage> {
       } else {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Gagal mengajukan surat')),
+            SnackBar(content: Text('Gagal mengajukan surat: ${result['body']}')),
           );
         }
       }

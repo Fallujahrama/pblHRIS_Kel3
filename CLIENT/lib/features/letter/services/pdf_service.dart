@@ -58,7 +58,7 @@ class PdfService {
 
               pw.SizedBox(height: 20),
 
-              // Isi Surat
+              // // Isi Surat
               pw.Text(
                 _getIsiSurat(data['jenis_surat'], data['tanggal_izin']),
                 textAlign: pw.TextAlign.justify,
@@ -67,13 +67,13 @@ class PdfService {
 
               pw.SizedBox(height: 30),
 
-              // Penutup
-              pw.Text(
-                "Demikian surat ${data['jenis_surat'].toLowerCase()} ini saya ajukan. "
-                "Atas perhatiannya, saya ucapkan terima kasih.",
-                textAlign: pw.TextAlign.justify,
-                style: const pw.TextStyle(fontSize: 12),
-              ),
+                // // Penutup
+                // pw.Text(
+                //   "Demikian ${data['jenis_surat'].toLowerCase()} ini saya ajukan. "
+                //   "Atas perhatiannya, saya ucapkan terima kasih.",
+                //   textAlign: pw.TextAlign.justify,
+                //   style: const pw.TextStyle(fontSize: 12),
+                // ) 
 
               pw.SizedBox(height: 40),
 

@@ -220,7 +220,7 @@ class EmployeeRecapDetailPage extends StatelessWidget {
                           ),
                         ),
                       );
-                    }).toList(),
+                    }),
                 ],
               ),
             ),

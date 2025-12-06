@@ -22,3 +22,4 @@ Route::delete('/letters/{id}', [LetterController::class, 'destroy']);
 Route::get('/employee-recap', [EmployeeRecapController::class, 'index']);
 Route::get('/employee-recap/download', [EmployeeRecapController::class, 'download']);
 Route::get('/employee-recap/download-pdf', [EmployeeRecapController::class, 'downloadPdf']);
+Route::get('/letters/{id}/download', [LetterController::class, 'downloadPdf']);
